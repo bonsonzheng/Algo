@@ -1,7 +1,7 @@
 /**
  * Problem desc is in https://leetcode.com/problems/number-of-islands/
  */
-public class numberOfIslands {
+public class NumberOfIslands {
 
     public static int numberOfIslands(char[][] grid){
         int cnt = 0;
