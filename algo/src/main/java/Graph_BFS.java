@@ -1,66 +1,56 @@
-import util.Node;
+import util.Graph;
 
 import java.util.*;
 
-public class BFS {
-    public static List<Node> getShortestPath(Node start, Node end) {
-        Map<Node, Integer> journeyTracker = new HashMap<>();
+public class Graph_BFS {
+    public static Map<Integer, List<Integer>> breathFirstSearch(Graph graph, int startingPoint) {
+        Map<Integer, List<Integer>> theMap = getInitialMap(graph.numberOfVertex,startingPoint);
 
-        Queue queue = new LinkedList<>();
-        int numOfEdges = 0;
+        Queue queue = new LinkedList();
+        List<Integer> visited = new ArrayList<>();
+        queue.add(startingPoint);
 
-        queue.add(start);
-        journeyTracker.put(start, 0);
-        while (!queue.isEmpty()) {
-            Node node = (Node) queue.remove();
+        while(!queue.isEmpty()){
+            Integer v = (Integer) queue.remove();
+            visited.add(v);
 
-            if (node.name.equalsIgnoreCase(end.name)) {
-                System.out.println("Reached the destination! ");
-                break;
-            }
-
-            numOfEdges++;
-            List<Node> neighbours = node.neighbours;
-            for (Node neighbour : neighbours) {
-                if (!journeyTracker.containsKey(neighbour)) {
+            List<Integer> neighbours = graph.getNeighbours(v);
+            for (Integer neighbour : neighbours) {
+                if(!visited.contains(neighbour) && !queue.contains(neighbour)){
                     queue.add(neighbour);
-                    journeyTracker.put(neighbour, numOfEdges);
+                    addPath(theMap, v, neighbour);
                 }
             }
         }
 
-        return getPath(journeyTracker, start, end);
+        return theMap;
     }
 
-    private static List<Node> getPath(Map<Node, Integer> journeyTracker, Node start, Node end) {
-        LinkedList path = new LinkedList();
-        Node node = end;
 
-        while (node != null) {
-            path.addFirst(node);
-            node = getMostClosedPredecessor(node, journeyTracker);
-        }
-
-        return path;
-
-    }
-
-    private static Node getMostClosedPredecessor(Node node, Map<Node, Integer> journeyTracker) {
-        List<Node> predecessors = node.getPredecessors();
-        Node mostClosedPredecessor = null;
-        int distance = Integer.MAX_VALUE;
-        for (Node predecessor : predecessors) {
-            int d = journeyTracker.get(predecessor);
-            if (d < distance) {
-                distance = d;
-                mostClosedPredecessor = predecessor;
+    private static Map<Integer, List<Integer>> getInitialMap(int numberOfVertex, int startingPoint) {
+        Map<Integer, List<Integer>> theMap = new HashMap<>();
+        for(int i = 0 ; i< numberOfVertex; i++){
+            LinkedList<Integer> path = new LinkedList<>();
+            if(i==startingPoint){
+                path.add(startingPoint);
             }
-        }
 
-        return mostClosedPredecessor;
+            theMap.put(i,path);
+        }
+        return theMap;
+    }
+
+    private static void addPath(Map<Integer, List<Integer>> theMap, Integer v, Integer neighbour) {
+            theMap.get(neighbour).addAll(theMap.get(v));
+            theMap.get(neighbour).add(neighbour);
     }
 
     public static void main(String[] args) {
+        System.out.println(" ----- traverse from v0 -----");
+        breathFirstSearch(Graph.getInstance_edgeWithoutWeight(),0).forEach((k,v)-> System.out.println("vertex:" + k + " path: " + v.toString()));
+
+        System.out.println(" ----- traverse from v3 -----");
+        breathFirstSearch(Graph.getInstance_edgeWithoutWeight(),3).forEach((k,v)-> System.out.println("vertex:" + k + " path: " + v.toString()));
 
     }
 }

@@ -1,7 +1,12 @@
 package util;
 
-/**
- * Created by zhengbangsheng on 2019/1/7.
- */
+import java.util.List;
+
 public class Node {
+    public String name;
+    public List<Node> neighbours;
+
+    public List<Node>getPredecessors(){
+        return null;
+    }
 }
