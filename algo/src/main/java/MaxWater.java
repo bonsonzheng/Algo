@@ -43,6 +43,6 @@ public class MaxWater {
 
 
     public static void main(String[] args) {
-        System.out.println(maxArea(new int[]{1,2,1}));
+        System.out.println("result: " + maxArea(new int[]{1,2,1}));
     }
 }
